@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+		{% include "/layouts/nav.html.twig" %}
+		<main class="px-3">
+			<h1>Nouveautés !</h1>
+
+			<h2>Les 2 derniéres séries</h2>
+			<div class="row row-cols-2 row-cols-md-2 g-4">
+				{% for item in lastSeries %}
+					<div class="col">
+						<div class="card mb-2">
+							<a class="overlay" href="{{path("app_serie_details", {id: item.getId()})}}"></a>
+							<div class="row g-0">
+								<img src="{{item.getImage()}}" class="img-fluid rounded-start" alt="{{item.getTitre()}}">
+								<div class="card-body">
+									<h5 class="card-title">
+										<img src="{{ item.getPays().getDrapeau() }}" alt="Drapeau du pays {{ item.getPays().getNom() }}" width="40px">
+										{{ item.getTitre() }}
+									</h5>
+									<p class="card-text">
+										<small class="text-body-secondary">Première Diffusion :
+											{{ item.getPremDiff()|date("d-m-Y") }}</small>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</main>
+
+	</div>
+
+{% endblock %}

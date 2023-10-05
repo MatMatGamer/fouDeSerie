@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+		{% include "/layouts/nav.html.twig" %}
+		<main class="px-3">
+			<h1>Fou De Séries ?</h1>
+			<img height="500" src="{{asset("assets/images/image1.jpg")}}" alt="un enfant devant une télé sur un petit meuble">
+			<p>Tu regardes quoi en ce moment ? Pas de spoil, je ne suis pas à jour...</p>
+		</main>
+	</div>
+
+{% endblock %}

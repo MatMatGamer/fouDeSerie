@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+		{% include "/layouts/nav.html.twig" %}
+		<main class="px-3">
+
+			<h1>{{LaSerie.getTitre()}}</h1>
+
+			<img src="{{LaSerie.getImage()}}" alt="">
+
+
+			<p>Nombre d'épisodes au total :
+				{{LaSerie.getNbEpisodes()}}</p>
+			<p>Première Diffusion
+				{{LaSerie.getPremDiff()|date("d-m-Y")}}</p>
+
+			<p>Pays :
+				{{ LaSerie.getPays().getNom() }}
+				<img src="{{ LaSerie.getPays().getDrapeau() }}" alt="Drapeau du pays {{ LaSerie.getPays().getNom() }}" width="40px"></p>
+
+			<br><br>
+			<p>Résumé :
+				<br>
+				{{LaSerie.getResume()}}</p>
+
+		</main>
+	</div>
+
+{% endblock %}

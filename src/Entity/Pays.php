@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Entity;
+
+class Pays
+{
+    private $id;
+    private $nom;
+    private $drapeau;
+
+    public function __construct($id, $nom, $drapeau)
+    {
+        $this->id = $id;
+        $this->nom = $nom;
+        $this->drapeau = $drapeau;
+    }
+
+    /**
+     * Get the value of id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the value of id
+     *
+     * @return  self
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nom
+     */
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
+    /**
+     * Set the value of nom
+     *
+     * @return  self
+     */
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of drapeau
+     */
+    public function getDrapeau()
+    {
+        return $this->drapeau;
+    }
+
+    /**
+     * Set the value of drapeau
+     *
+     * @return  self
+     */
+    public function setDrapeau($drapeau)
+    {
+        $this->drapeau = $drapeau;
+
+        return $this;
+    }
+}

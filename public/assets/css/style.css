@@ -1,0 +1,63 @@
+/*
+ * Globals
+ */
+
+
+/* Custom default button */
+.btn-light,
+.btn-light:hover,
+.btn-light:focus {
+    color: #333;
+    text-shadow: none;
+    /* Prevent inheritance from `body` */
+}
+
+
+/*
+ * Base structure
+ */
+
+.cover-container {
+    max-width: 60em;
+}
+
+
+/*
+ * Header
+ */
+
+.nav-masthead .nav-link {
+    color: rgba(255, 255, 255, .5);
+    border-bottom: .25rem solid transparent;
+}
+
+.nav-masthead .nav-link:hover,
+.nav-masthead .nav-link:focus {
+    border-bottom-color: rgba(255, 255, 255, .25);
+}
+
+.nav-masthead .nav-link+.nav-link {
+    margin-left: 1rem;
+}
+
+.nav-masthead .active {
+    color: #fff;
+    border-bottom-color: #fff;
+}
+
+.link-unstyled,
+.link-unstyled:link,
+.link-unstyled:hover {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+a.overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.translate-custom-70 {
+    transform: translate(-70%, -50%) !important;
+}

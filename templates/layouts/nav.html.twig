@@ -1,0 +1,28 @@
+<header class="mb-auto">
+	<div>
+		<h3 class="float-md-start mb-0">
+			<a href="{{path("app_home")}}" class="link-unstyled">FouDeSérie</a>
+
+		</h3>
+		<nav class="nav nav-masthead justify-content-center float-md-end">
+			{% if app.request.uri == 'http://192.168.65.10' ~ path("app_home") %}
+				<a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{{path("app_home")}}">Acceuil</a>
+			{% else %}
+				<a class="nav-link fw-bold py-1 px-0" href="{{path("app_home")}}">Acceuil</a>
+			{% endif %}
+
+			{% if app.request.uri == 'http://192.168.65.10' ~ path("app_news") %}
+				<a class="nav-link fw-bold py-1 px-0 active" href="{{path("app_news")}}">News</a>
+			{% else %}
+				<a class="nav-link fw-bold py-1 px-0" href="{{path("app_news")}}">News</a>
+			{% endif %}
+
+			{% if app.request.uri starts with 'http://192.168.65.10' ~ path("app_serie") %}
+				<a class="nav-link fw-bold py-1 px-0 active" href="{{path("app_serie")}}">Séries</a>
+			{% else %}
+				<a class="nav-link fw-bold py-1 px-0" href="{{path("app_serie")}}">Séries</a>
+			{% endif %}
+
+		</nav>
+	</div>
+</header>
