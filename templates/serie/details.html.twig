@@ -12,19 +12,19 @@
 
 			<p>Nombre d'épisodes au total :
 				{{LaSerie.getNbEpisodes()}}</p>
+			<p>
+				Pays D'origine :
+				{{LaSerie.getPays().getNom()}}
+				<img src="{{LaSerie.getPays().getDrapeau()}}" width="35"></p>
 			<p>Première Diffusion
-				{{LaSerie.getPremDiff()|date("d-m-Y")}}</p>
-
-			<p>Pays :
-				{{ LaSerie.getPays().getNom() }}
-				<img src="{{ LaSerie.getPays().getDrapeau() }}" alt="Drapeau du pays {{ LaSerie.getPays().getNom() }}" width="40px"></p>
+				{{LaSerie.getPremiereDiffusion()|date("d-m-Y")}}</p>
 
 			<br><br>
 			<p>Résumé :
 				<br>
 				{{LaSerie.getResume()}}</p>
 
+
 		</main>
 	</div>
-
 {% endblock %}

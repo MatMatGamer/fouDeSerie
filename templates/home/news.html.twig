@@ -16,12 +16,12 @@
 								<img src="{{item.getImage()}}" class="img-fluid rounded-start" alt="{{item.getTitre()}}">
 								<div class="card-body">
 									<h5 class="card-title">
-										<img src="{{ item.getPays().getDrapeau() }}" alt="Drapeau du pays {{ item.getPays().getNom() }}" width="40px">
+										<img src="{{item.getPays().getDrapeau()}}" width="35">
 										{{ item.getTitre() }}
 									</h5>
 									<p class="card-text">
 										<small class="text-body-secondary">Première Diffusion :
-											{{ item.getPremDiff()|date("d-m-Y") }}</small>
+											{{ item.getPremiereDiffusion()|date("d-m-Y") }}</small>
 									</p>
 								</div>
 							</div>
