@@ -11,6 +11,14 @@
 				{{ SerieCount }}
 				séries d'affichées !
 			</div>
+			<p>Trier par Pays</p>
+			{% for item in lesPays %}
+				<a href="{{path('app_series_by_pays', {id: item.getId()})}}"><img src="{{item.getDrapeau()}}" height="20"></a>
+			{% endfor %}
+			<br>
+			<br>
+			<br>
+
 
 			<div class="row row-cols-2 row-cols-md-3 g-4">
 				{% for item in LesSeries %}
@@ -27,7 +35,7 @@
 								<img src="{{item.getImage()}}" class="img-fluid rounded-start" alt="{{item.getTitre()}}">
 								<div class="card-body">
 									<h5 class="card-title">
-										<img src="{{item.getPays().getDrapeau()}}" width="35">
+										<img src="{{item.getPays().getDrapeau()}}" height="20">
 										{{ item.getTitre() }}
 									</h5>
 									<p class="card-text">

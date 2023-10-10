@@ -23,6 +23,7 @@ class SerieRepository extends ServiceEntityRepository
     }
 
     /**
+     * Retourne la série avec l'id `$value` et son pays associé 
      * @return Serie Returns an array of Serie objects
      */
     public function findById($value): Serie

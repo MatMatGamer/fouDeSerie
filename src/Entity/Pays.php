@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PaysRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaysRepository::class)]
@@ -18,6 +19,9 @@ class Pays
 
     #[ORM\Column(length: 255)]
     private ?string $drapeau = null;
+
+    #[ORM\OneToMany(targetEntity: Serie::class, mappedBy: 'pays')]
+    private Collection $series;
 
     public function getId(): ?int
     {
@@ -44,6 +48,31 @@ class Pays
     public function setDrapeau(string $drapeau): static
     {
         $this->drapeau = $drapeau;
+
+        return $this;
+    }
+
+    public function getSeries(): ?Collection
+    {
+        return $this->series;
+    }
+
+    public function addSeries(Serie $serie): static
+    {
+        if (!$this->series->contains($serie)) {
+            $this->series->add($serie);
+            $serie->setPays($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeries(Serie $serie): static
+    {
+        if ($this->series->contains($serie)) {
+            $this->series->removeElement($serie);
+            $serie->setPays(null);
+        }
 
         return $this;
     }

@@ -6,8 +6,6 @@ use App\Entity\Pays;
 use App\Repository\SerieRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToOne;
 
 #[ORM\Table(name: 'serie')]
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
@@ -33,7 +31,7 @@ class Serie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\ManyToOne(targetEntity: pays::class)]
+    #[ORM\ManyToOne(targetEntity: pays::class, inversedBy: "series")]
     private Pays $pays;
 
     public function getId(): ?int
