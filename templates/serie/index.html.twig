@@ -11,11 +11,19 @@
 				{{ SerieCount }}
 				séries d'affichées !
 			</div>
-			<p>Trier par Pays</p>
-			{% for item in lesPays %}
-				<a href="{{path('app_series_by_pays', {id: item.getId()})}}"><img src="{{item.getDrapeau()}}" height="20"></a>
-			{% endfor %}
+			<div>
+				<p>Trier par Pays</p>
+				{% for item in lesPays %}
+					<a href="{{path('app_series_by_pays', {id: item.getId()})}}"><img src="{{item.getDrapeau()}}" height="20"></a>
+				{% endfor %}
+			</div>
 			<br>
+			<div>
+				<p>Trier par Genre</p>
+				{% for item in lesGenres %}
+					<a href="{{path('app_series_by_genre', {id: item.getId()})}}">{{item.getLibelle()}}</a>
+				{% endfor %}
+			</div>
 			<br>
 			<br>
 
@@ -26,7 +34,7 @@
 						<div class="card mb-2">
 							{% if item.getId() in LastIds %}
 								<span class="position-absolute top-0 start-100 translate-custom-70 badge rounded-pill bg-danger">
-									Nouveaux
+									Nouveau
 								</span>
 							{% endif %}
 
@@ -40,7 +48,7 @@
 									</h5>
 									<p class="card-text">
 										<small class="text-body-secondary">Première Diffusion :
-											{{ item.getPremiereDiffusion()|date("d-m-Y") }}</small>
+											{{ item.getPremiereDiffusion()|date("d/m/Y") }}</small>
 									</p>
 
 								</div>

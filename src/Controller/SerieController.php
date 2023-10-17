@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\GenreRepository;
 use App\Repository\PaysRepository;
 use App\Repository\SerieRepository;
 use App\Services\SerieService;
@@ -12,13 +13,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class SerieController extends AbstractController
 {
     #[Route('/serie', name: 'app_serie')]
-    public function index(PaysRepository $paysRepo, SerieRepository $serieRepo)
+    public function index(PaysRepository $paysRepo, GenreRepository $genreRepo, SerieRepository $serieRepo)
     {
         return $this->render('serie/index.html.twig', [
             'LesSeries' => $serieRepo->findBy([], ["titre" => "ASC"]),
             'SerieCount' => $serieRepo->countAll(),
             "LastIds" => $serieRepo->findLastsIds(2),
-            'lesPays' => $paysRepo->findAll()
+            'lesPays' => $paysRepo->findAll(),
+            'lesGenres' => $genreRepo->findAll()
         ]);
     }
 
@@ -31,14 +33,28 @@ class SerieController extends AbstractController
     }
 
     #[Route('/serie/pays/{id}', name: 'app_series_by_pays')]
-    public function paysSeries(PaysRepository $paysRepo, SerieRepository $serieRepo, $id)
+    public function paysSeries(PaysRepository $paysRepo, GenreRepository $genreRepo, SerieRepository $serieRepo, $id)
     {
         $series = $paysRepo->find($id)->getSeries();
         return $this->render('serie/index.html.twig', [
             'LesSeries' => $series,
             'SerieCount' => count($series),
             'LastIds' => $serieRepo->findLastsIds(2),
-            'lesPays' => $paysRepo->findAll()
+            'lesPays' => $paysRepo->findAll(),
+            'lesGenres' => $genreRepo->findAll()
+        ]);
+    }
+
+    #[Route('/serie/genre/{id}', name: 'app_series_by_genre')]
+    public function genreSeries(PaysRepository $paysRepo, GenreRepository $genreRepo, SerieRepository $serieRepo, $id)
+    {
+        $series = $genreRepo->find($id)->getLesSeries();
+        return $this->render('serie/index.html.twig', [
+            'LesSeries' => $series,
+            'SerieCount' => count($series),
+            'LastIds' => $serieRepo->findLastsIds(2),
+            'lesPays' => $paysRepo->findAll(),
+            'lesGenres' => $genreRepo->findAll()
         ]);
     }
 }

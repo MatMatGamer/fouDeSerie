@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Pays;
 use App\Repository\SerieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,8 +33,18 @@ class Serie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\ManyToOne(targetEntity: pays::class, inversedBy: "series")]
+    #[ORM\ManyToOne(targetEntity: Pays::class, inversedBy: "series")]
     private Pays $pays;
+
+    #[ORM\ManyToMany(targetEntity: Genre::class, inversedBy: 'lesSeries')]
+    #[ORM\JoinColumn(name: "idPays", referencedColumnName: "id")]
+    #[ORM\InverseJoinColumn(name: "idGenre", referencedColumnName: "id")]
+    private Collection $lesGenres;
+
+    public function __construct()
+    {
+        $this->lesGenres = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -107,6 +119,30 @@ class Serie
     public function setPays(?Pays $pays): static
     {
         $this->pays = $pays;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, genre>
+     */
+    public function getLesGenres(): Collection
+    {
+        return $this->lesGenres;
+    }
+
+    public function addLesGenre(genre $lesGenre): static
+    {
+        if (!$this->lesGenres->contains($lesGenre)) {
+            $this->lesGenres->add($lesGenre);
+        }
+
+        return $this;
+    }
+
+    public function removeLesGenre(genre $lesGenre): static
+    {
+        $this->lesGenres->removeElement($lesGenre);
 
         return $this;
     }
