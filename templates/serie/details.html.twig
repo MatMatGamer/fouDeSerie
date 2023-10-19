@@ -7,25 +7,41 @@
 
 			<h1>{{LaSerie.getTitre()}}</h1>
 
-			<img src="{{LaSerie.getImage()}}" alt="">
+			<img src="{{LaSerie.getImage()}}" alt="" class="img-details"/>
 
 
 			<p>Nombre d'épisodes au total :
 				{{LaSerie.getNbEpisodes()}}</p>
+
 			<p>
 				Pays D'origine :
 				{{LaSerie.getPays().getNom()}}
-				<img src="{{LaSerie.getPays().getDrapeau()}}" height="20"></p>
+				<img src="{{LaSerie.getPays().getDrapeau()}}" height="20">
+			</p>
+
 			<p>Première Diffusion
-				{{LaSerie.getPremiereDiffusion()|date("d/m/Y")}}</p>
-
+				{{LaSerie.getPremiereDiffusion()|date("d/m/Y")}}
+			</p>
+			<br>
 			<p>Genres :
-				{{LaSerie.getLesGenres()|map(g => g.getLibelle())|join(", ")}}</p>
+				{{LaSerie.getLesGenres()|map(g => g.getLibelle())|join(", ")}}
+			</p>
 
+			{% if LaSerie is instanceof("App\\Entity\\SerieWeb")%}
+				<p>Site:
+					<a href="{{LaSerie.getSite()}}">{{LaSerie.getSite()}}</a>
+				</p>
+
+			{% elseif LaSerie is instanceof("App\\Entity\\SerieTv") %}
+				<p>Chaine de Diffusion:
+					{{LaSerie.getChaineDiffusion()}}</p>
+
+			{% endif %}
 			<br><br>
 			<p>Résumé :
 				<br>
-				{{LaSerie.getResume()}}</p>
+				{{LaSerie.getResume()}}
+			</p>
 
 
 		</main>

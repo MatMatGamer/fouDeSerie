@@ -8,8 +8,8 @@
 			<div class="alert alert-info" role="alert" data-bs-theme="dark">
 
 				Il y as actuellement
-				{{ SerieCount }}
-				séries d'affichées !
+				{{ SerieTvCount }}
+				séries TV !
 			</div>
 			<div>
 				<p>Trier par Pays</p>
@@ -29,34 +29,25 @@
 
 
 			<div class="row row-cols-2 row-cols-md-3 g-4">
-				{% for item in LesSeries %}
-					<div class="col">
-						<div class="card mb-2">
-							{% if item.getId() in LastIds %}
-								<span class="position-absolute top-0 start-100 translate-custom-70 badge rounded-pill bg-danger">
-									Nouveau
-								</span>
-							{% endif %}
-
-							<a class="overlay" href="{{path("app_serie_details", {id: item.getId()})}}"></a>
-							<div class="row g-0">
-								<img src="{{item.getImage()}}" class="img-fluid rounded-start" alt="{{item.getTitre()}}">
-								<div class="card-body">
-									<h5 class="card-title">
-										<img src="{{item.getPays().getDrapeau()}}" height="20">
-										{{ item.getTitre() }}
-									</h5>
-									<p class="card-text">
-										<small class="text-body-secondary">Première Diffusion :
-											{{ item.getPremiereDiffusion()|date("d/m/Y") }}</small>
-									</p>
-
-								</div>
-							</div>
-						</div>
-					</div>
+				{% for item in LesSeriesTv %}
+					{% include "/serie/serieCard.html.twig" %}
 				{% endfor %}
 			</div>
+
+			<hr class="rounded">
+
+			<div class="alert alert-info" role="alert" data-bs-theme="dark">
+				Il y as actuellement
+				{{ SerieWebCount }}
+				séries Web !
+			</div>
+
+			<div class="row row-cols-2 row-cols-md-3 g-4">
+				{% for item in LesSeriesWeb %}
+					{% include "/serie/serieCard.html.twig" %}
+				{% endfor %}
+			</div>
+
 		</main>
 
 	</div>

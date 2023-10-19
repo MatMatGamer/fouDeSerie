@@ -19,6 +19,7 @@
 
 .cover-container {
     max-width: 60em;
+    margin-bottom: 2em;
 }
 
 
@@ -60,4 +61,21 @@ a.overlay {
 
 .translate-custom-70 {
     transform: translate(-70%, -50%) !important;
+}
+
+/* Rounded border */
+hr.rounded {
+    border-top: 8px solid #bbb;
+    border-radius: 5px;
+}
+
+.img-card {
+    width: 100% !important;
+    height: 380px !important;
+    aspect-ratio: none;
+}
+
+.img-details {
+    width: 40% !important;
+    aspect-ratio: none;
 }

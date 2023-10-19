@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'serie')]
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
+#[ORM\InheritanceType("SINGLE_TABLE")]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['tv' => SerieTv::class, 'web' => SerieWeb::class])]
 class Serie
 {
     #[ORM\Id]
@@ -37,7 +40,7 @@ class Serie
     private Pays $pays;
 
     #[ORM\ManyToMany(targetEntity: Genre::class, inversedBy: 'lesSeries')]
-    #[ORM\JoinColumn(name: "idPays", referencedColumnName: "id")]
+    #[ORM\JoinColumn(name: "idSerie", referencedColumnName: "id")]
     #[ORM\InverseJoinColumn(name: "idGenre", referencedColumnName: "id")]
     private Collection $lesGenres;
 
