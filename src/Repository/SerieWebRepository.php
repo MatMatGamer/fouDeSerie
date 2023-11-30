@@ -64,6 +64,22 @@ class SerieWebRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return SerieWeb[] Returns an array of Serie objects
+     */
+    public function findBetweenDates($date1, $date2): array
+    {
+        $res = $this->createQueryBuilder('serie')
+            ->where("serie.premiereDiffusion >= :date1")
+            ->andWhere("serie.premiereDiffusion <= :date2")
+            ->setParameter(":date1", $date1 . "-01")
+            ->setParameter(":date2", $date2 . "-31")
+            ->orderBy('serie.titre', 'ASC')
+            ->getQuery()
+            ->getResult();
+        return $res;
+    }
+
+    /**
      * @return int Returns an int for number of rows
      */
     public function countAll(): int

@@ -25,6 +25,19 @@
 				{% endfor %}
 			</div>
 			<br>
+			<div>
+				<p>Année de diffusion comprise entre :</p>
+				<form action="{{path("app_series_between_dates_redirect")}}" method="get">
+					<div class="input-group mb-3">
+						<span class="input-group-text">ENTRE</span>
+						<input type="month" name="date1" id="date1" value="{{date1 is defined ? date1 : null}}" class="form-control">
+						<span class="input-group-text">ET</span>
+						<input type="month" name="date2" id="date2" value="{{date2 is defined ? date2 : null}}" class="form-control">
+					</div>
+					<button type="submit" class="btn btn-success">Chercher</button>
+
+				</form>
+			</div>
 			<br>
 
 
