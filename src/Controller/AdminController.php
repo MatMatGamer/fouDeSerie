@@ -75,7 +75,6 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $manager->getManager();
-            $entityManager->persist($serie);
             $entityManager->flush();
             return $this->redirectToRoute("app_serie");
         }
@@ -102,7 +101,6 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $manager->getManager();
-            $entityManager->persist($serie);
             $entityManager->flush();
             return $this->redirectToRoute("app_serie");
         }
