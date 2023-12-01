@@ -1,12 +1,19 @@
 <div class="col">
 	<div class="card mb-2">
-		{% if item.getId() in LastIds %}
-			<span class="position-absolute top-0 start-100 translate-custom-70 badge rounded-pill bg-danger">
-				Nouveau
-			</span>
+		{% if LastIds is defined%}
+			{% if item.getId() in LastIds %}
+				<span class="position-absolute top-0 start-100 translate-custom-70 badge rounded-pill bg-danger">
+					Nouveau
+				</span>
+			{% endif %}
 		{% endif %}
-
-		<a class="overlay" href="{{path("app_serie_details", {id: item.getId()})}}"></a>
+		{% if app.request.attributes.get('_route') == "app_admin_seriestv" %}
+			<a class="overlay" href="{{path("app_admin_update_serietv", {id: item.getId()})}}"></a>
+		{% elseif app.request.attributes.get('_route') == "app_admin_seriesweb" %}
+			<a class="overlay" href="{{path("app_admin_update_serieweb", {id: item.getId()})}}"></a>
+		{% else %}
+			<a class="overlay" href="{{path("app_serie_details", {id: item.getId()})}}"></a>
+		{% endif %}
 		<div class="row g-0">
 			<img src="{{item.getImage()}}" class="img-fluid rounded-start img-card" alt="{{item.getTitre()}}">
 

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+		{% include "/layouts/nav.html.twig" %}
+		<main class="px-3">
+
+			<div class="alert alert-danger">
+				Vous êtes actuellement sur le panel d'administration !
+			</div>
+			<hr>
+			<div>
+				<div class="alert alert-secondary" role="alert">
+					Ajout de Série
+				</div>
+
+				<a href="{{path("app_admin_addserietv")}}" class="btn btn-primary">
+					Ajouter une Serie Tv
+				</a>
+				<a href="{{path("app_admin_addserieweb")}}" class="btn btn-primary">
+					Ajouter une Serie Web
+				</a>
+			</div>
+			<hr>
+			<div>
+				<div class="alert alert-secondary" role="alert">
+					Modification de Série
+				</div>
+
+				<a href="{{path("app_admin_seriestv")}}" class="btn btn-primary">
+					Modifier une Serie Tv
+				</a>
+				<a href="{{path("app_admin_seriesweb")}}" class="btn btn-primary">
+					Modifier une Serie Web
+				</a>
+			</div>
+		</main>
+	</div>
+{% endblock %}
