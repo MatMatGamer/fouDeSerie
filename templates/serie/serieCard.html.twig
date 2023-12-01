@@ -7,10 +7,8 @@
 				</span>
 			{% endif %}
 		{% endif %}
-		{% if app.request.attributes.get('_route') == "app_admin_seriestv" %}
-			<a class="overlay" href="{{path("app_admin_update_serietv", {id: item.getId()})}}"></a>
-		{% elseif app.request.attributes.get('_route') == "app_admin_seriesweb" %}
-			<a class="overlay" href="{{path("app_admin_update_serieweb", {id: item.getId()})}}"></a>
+		{% if app.request.attributes.get('_route') == "app_admin_listeseries" %}
+			<a class="overlay" href="{{path("app_admin_updateserie", {id: item.getId()})}}"></a>
 		{% else %}
 			<a class="overlay" href="{{path("app_serie_details", {id: item.getId()})}}"></a>
 		{% endif %}

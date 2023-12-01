@@ -5,11 +5,14 @@ namespace App\Controller;
 use App\Entity\SerieTv;
 use App\Entity\SerieWeb;
 use App\Form\SerieTvType;
+use App\Form\SerieType;
 use App\Form\SerieWebType;
+use App\Repository\SerieRepository;
 use App\Repository\SerieTvRepository;
 use App\Repository\SerieWebRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,11 +25,22 @@ class AdminController extends AbstractController
         return $this->render('admin/index.html.twig');
     }
 
-    #[Route('/admin/serieTv', name: 'app_admin_addserietv')]
-    public function addSerieTv(ManagerRegistry $repo, Request $request): Response
+    #[Route('/admin/addSerie/{type}', name: 'app_admin_addserie')]
+    public function addSerie(ManagerRegistry $repo, Request $request, string $type): Response
     {
-        $serie = new SerieTv();
-        $form = $this->createForm(SerieTvType::class, $serie);
+        if ($type == "tv") {
+            $serie = new SerieTv();
+            $form = $this->createForm(SerieType::class, $serie)
+                ->add('chaineDiffusion');
+        } else if ($type == "web") {
+            $serie = new SerieWeb();
+            $form = $this->createForm(SerieType::class, $serie)
+                ->add('site');
+        } else {
+            $this->addFlash("err", "Le type spécifié est introuvable !");
+            return $this->redirectToRoute("app_admin");
+        }
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $repo->getManager();
@@ -35,79 +49,50 @@ class AdminController extends AbstractController
             return $this->redirectToRoute("app_serie");
         }
 
-        return $this->render('admin/serieTvForm.html.twig', [
-            "form" => $form->createView()
+        return $this->render('admin/serieForm.html.twig', [
+            "form" => $form->createView(),
+            "type" => $type
         ]);
     }
 
-    #[Route('/admin/serieWeb', name: 'app_admin_addserieweb')]
-    public function addSerieWeb(ManagerRegistry $repo, Request $request): Response
+    #[Route('/admin/listeSeries/{type}', name: 'app_admin_listeseries')]
+    public function listeSeries(SerieTvRepository $serieTv, SerieWebRepository $serieWeb, string $type): Response
     {
-        $serie = new SerieWeb();
-        $form = $this->createForm(SerieWebType::class, $serie);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $repo->getManager();
-            $entityManager->persist($serie);
-            $entityManager->flush();
-            return $this->redirectToRoute("app_serie");
+        if ($type == "tv") {
+            $series = $serieTv->findAll();
+        } else if ($type == "web") {
+            $series = $serieWeb->findAll();
+        } else {
+            $this->addFlash("err", "Le type spécifié est introuvable !");
+            return $this->redirectToRoute("app_admin");
         }
-
-        return $this->render('admin/serieWebForm.html.twig', [
-            "form" => $form->createView()
-        ]);
-    }
-
-    #[Route('/admin/seriesTv', name: 'app_admin_seriestv')]
-    public function listeSerieTv(SerieTvRepository $repo): Response
-    {
         return $this->render('admin/listeSerie.html.twig', [
-            "type" => "tv",
-            "LesSeries" => $repo->findAll()
+            "type" => $type,
+            "LesSeries" => $series
         ]);
     }
 
-    #[Route('/admin/seriesTv/update/{id}', name: 'app_admin_update_serietv')]
-    public function updateSerieTv(SerieTvRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
+    #[Route('/admin/series/update/{id}', name: 'app_admin_updateserie')]
+    public function updateSerie(SerieRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
     {
         $serie = $repo->find($id);
-        $form = $this->createForm(SerieTvType::class, $serie);
+        $form = $this->createForm(SerieType::class, $serie);
+        if ($serie instanceof SerieTv) {
+            $form->add('chaineDiffusion');
+        } else if ($serie instanceof SerieWeb) {
+            $form->add('site');
+        } else {
+            $this->addFlash("err", "Une erreur est survenue sur cette série");
+            return $this->redirectToRoute("app_admin");
+        }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $manager->getManager();
-            $entityManager->persist($serie);
             $entityManager->flush();
             return $this->redirectToRoute("app_serie");
         }
 
         return $this->render('admin/serieTvForm.html.twig', [
-            "form" => $form->createView()
-        ]);
-    }
-
-    #[Route('/admin/seriesWeb', name: 'app_admin_seriesweb')]
-    public function listeSerieWeb(SerieWebRepository $repo): Response
-    {
-        return $this->render('admin/listeSerie.html.twig', [
-            "type" => "web",
-            "LesSeries" => $repo->findAll()
-        ]);
-    }
-
-    #[Route('/admin/seriesWeb/update/{id}', name: 'app_admin_update_serieweb')]
-    public function updateSerieWeb(SerieWebRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
-    {
-        $serie = $repo->find($id);
-        $form = $this->createForm(SerieWebType::class, $serie);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $manager->getManager();
-            $entityManager->persist($serie);
-            $entityManager->flush();
-            return $this->redirectToRoute("app_serie");
-        }
-
-        return $this->render('admin/serieWebForm.html.twig', [
             "form" => $form->createView()
         ]);
     }

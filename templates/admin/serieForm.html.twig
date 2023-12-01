@@ -12,7 +12,11 @@
 			{{ form_row(form.premiereDiffusion) }}
 			{{ form_row(form.nbEpisodes) }}
 			{{ form_row(form.image) }}
-			{{ form_row(form.chaineDiffusion) }}
+			{% if type == "tv"%}
+				{{ form_row(form.chaineDiffusion) }}
+			{% elseif type == "web"%}
+				{{ form_row(form.site) }}
+			{% endif %}
 			{{ form_row(form.pays) }}
 			{{ form_row(form.lesGenres) }}
 			<button type="submit" class="btn btn-success">
