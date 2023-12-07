@@ -2,11 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Genre;
+use App\Entity\Pays;
 use App\Entity\SerieTv;
 use App\Entity\SerieWeb;
+use App\Form\GenreType;
+use App\Form\PaysType;
 use App\Form\SerieTvType;
 use App\Form\SerieType;
 use App\Form\SerieWebType;
+use App\Repository\GenreRepository;
+use App\Repository\PaysRepository;
 use App\Repository\SerieRepository;
 use App\Repository\SerieTvRepository;
 use App\Repository\SerieWebRepository;
@@ -46,12 +52,61 @@ class AdminController extends AbstractController
             $entityManager = $repo->getManager();
             $entityManager->persist($serie);
             $entityManager->flush();
+
+            $this->addFlash("success", "La série à bien été ajoutée avec succès !");
             return $this->redirectToRoute("app_serie");
         }
 
         return $this->render('admin/serieForm.html.twig', [
             "form" => $form->createView(),
             "type" => $type
+        ]);
+    }
+
+    #[Route('/admin/genre/add/', name: 'app_admin_addgenre')]
+    public function addGenre(ManagerRegistry $repo, Request $request): Response
+    {
+        $genre = new Genre();
+        $form = $this->createForm(GenreType::class, $genre);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $repo->getManager();
+            $entityManager->persist($genre);
+
+            foreach ($genre->getLesSeries() as $serie) {
+                $serie->addLesGenre($genre);
+            }
+
+            $entityManager->flush();
+
+            $this->addFlash("success", "Le genre à bien été ajouté avec succès !");
+            return $this->redirectToRoute("app_serie");
+        }
+
+        return $this->render('admin/genreForm.html.twig', [
+            "form" => $form->createView(),
+        ]);
+    }
+
+    #[Route('/admin/pays/add/', name: 'app_admin_addpays')]
+    public function addPays(ManagerRegistry $repo, Request $request): Response
+    {
+        $pays = new Pays();
+        $form = $this->createForm(PaysType::class, $pays);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $repo->getManager();
+            $entityManager->persist($pays);
+            $entityManager->flush();
+
+            $this->addFlash("success", "Le pays à bien été ajouté avec succès !");
+            return $this->redirectToRoute("app_serie");
+        }
+
+        return $this->render('admin/paysForm.html.twig', [
+            "form" => $form->createView(),
         ]);
     }
 
@@ -69,6 +124,24 @@ class AdminController extends AbstractController
         return $this->render('admin/listeSerie.html.twig', [
             "type" => $type,
             "LesSeries" => $series
+        ]);
+    }
+
+    #[Route('/admin/listeGenres', name: 'app_admin_listegenres')]
+    public function listeGenres(GenreRepository $genre): Response
+    {
+        $genres = $genre->findAll();
+        return $this->render('admin/listeGenre.html.twig', [
+            "LesGenres" => $genres
+        ]);
+    }
+
+    #[Route('/admin/listePays', name: 'app_admin_listepays')]
+    public function listePays(PaysRepository $pays): Response
+    {
+        $pays = $pays->findAll();
+        return $this->render('admin/listePays.html.twig', [
+            "LesPays" => $pays
         ]);
     }
 
@@ -91,12 +164,57 @@ class AdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $manager->getManager();
             $entityManager->flush();
+
+            $this->addFlash("success", "La série à bien été modifiée avec succès !");
             return $this->redirectToRoute("app_serie");
         }
 
         return $this->render('admin/serieForm.html.twig', [
             "form" => $form->createView(),
             "type" => $type
+        ]);
+    }
+
+    #[Route('/admin/genres/update/{id}', name: 'app_admin_updategenre')]
+    public function updateGenre(GenreRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
+    {
+        $genre = $repo->find($id);
+        $form = $this->createForm(GenreType::class, $genre);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $manager->getManager();
+
+            foreach ($genre->getLesSeries() as $serie) {
+                $serie->addLesGenre($genre);
+            }
+
+            $entityManager->flush();
+
+            $this->addFlash("success", "Le genre à bien été modifié avec succès !");
+            return $this->redirectToRoute("app_serie");
+        }
+
+        return $this->render('admin/genreForm.html.twig', [
+            "form" => $form->createView(),
+        ]);
+    }
+
+    #[Route('/admin/pays/update/{id}', name: 'app_admin_updatepays')]
+    public function updatePays(PaysRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
+    {
+        $pays = $repo->find($id);
+        $form = $this->createForm(PaysType::class, $pays);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $manager->getManager();
+            $entityManager->flush();
+
+            $this->addFlash("success", "Le pays à bien été modifié avec succès !");
+            return $this->redirectToRoute("app_serie");
+        }
+
+        return $this->render('admin/paysForm.html.twig', [
+            "form" => $form->createView(),
         ]);
     }
 }

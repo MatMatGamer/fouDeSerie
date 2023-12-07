@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+		{% include "/layouts/nav.html.twig" %}
+		<main class="px-3">
+			<h1>Les Pays</h1>
+
+			<div class="row row-cols-2 row-cols-md-3 g-4">
+				{% for item in LesPays %}
+					<div class="col">
+						<div class="card mb-2">
+							<a class="overlay" href="{{path("app_admin_updatepays", {id: item.getId()})}}"></a>
+							<div class="row g-0">
+								<div class="card-body">
+									<h5 class="card-title">
+										<img src="{{item.getDrapeau()}}" height="20">
+										{{ item.getNom() }}
+									</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				{% endfor %}
+			</div>
+
+		</main>
+
+	</div>
+{% endblock %}
