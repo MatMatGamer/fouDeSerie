@@ -18,7 +18,9 @@ class SerieType extends AbstractType
         $builder
             ->add('titre')
             ->add('resume')
-            ->add('premiereDiffusion')
+            ->add('premiereDiffusion', null, [
+                'widget' => 'single_text',
+            ])
             ->add('nbEpisodes')
             ->add('image')
             ->add(

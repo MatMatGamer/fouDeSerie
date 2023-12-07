@@ -25,7 +25,7 @@ class AdminController extends AbstractController
         return $this->render('admin/index.html.twig');
     }
 
-    #[Route('/admin/addSerie/{type}', name: 'app_admin_addserie')]
+    #[Route('/admin/series/add/{type}', name: 'app_admin_addserie')]
     public function addSerie(ManagerRegistry $repo, Request $request, string $type): Response
     {
         if ($type == "tv") {
@@ -79,8 +79,10 @@ class AdminController extends AbstractController
         $form = $this->createForm(SerieType::class, $serie);
         if ($serie instanceof SerieTv) {
             $form->add('chaineDiffusion');
+            $type = "tv";
         } else if ($serie instanceof SerieWeb) {
             $form->add('site');
+            $type = "web";
         } else {
             $this->addFlash("err", "Une erreur est survenue sur cette série");
             return $this->redirectToRoute("app_admin");
@@ -92,8 +94,9 @@ class AdminController extends AbstractController
             return $this->redirectToRoute("app_serie");
         }
 
-        return $this->render('admin/serieTvForm.html.twig', [
-            "form" => $form->createView()
+        return $this->render('admin/serieForm.html.twig', [
+            "form" => $form->createView(),
+            "type" => $type
         ]);
     }
 }

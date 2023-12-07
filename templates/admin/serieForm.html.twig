@@ -20,7 +20,7 @@
 			{{ form_row(form.pays) }}
 			{{ form_row(form.lesGenres) }}
 			<button type="submit" class="btn btn-success">
-				{% if app.request.attributes.get('_route') == "app_admin_update_serietv" %}
+				{% if app.request.attributes.get('_route') == "app_admin_updateserie" %}
 					Modifier
 				{% else %}
 					Ajouter
