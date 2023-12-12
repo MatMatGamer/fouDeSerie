@@ -79,3 +79,9 @@ hr.rounded {
     width: 40% !important;
     aspect-ratio: none;
 }
+
+.hiddenbtn {
+    background: transparent;
+    border: none !important;
+    padding: 0;
+}

@@ -5,7 +5,7 @@
 		{% include "/layouts/nav.html.twig" %}
 		<main class="px-3">
 			{% for flash in app.flashes("success") %}
-				<div class="alert alert-success">
+				<div class="alert alert-success" role="alert" data-bs-theme="dark">
 					{{flash}}
 				</div>
 			{% endfor %}

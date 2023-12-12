@@ -8,24 +8,39 @@
 			{% endif %}
 		{% endif %}
 		{% if app.request.attributes.get('_route') == "app_admin_listeseries" %}
-			<a class="overlay" href="{{path("app_admin_updateserie", {id: item.getId()})}}"></a>
-		{% else %}
-			<a class="overlay" href="{{path("app_serie_details", {id: item.getId()})}}"></a>
+			{% if action == "delete" %}
+				<form action="{{ path("app_admin_deleteserie", {id:item.getId()})}}" method="post" onsubmit="return confirm('Êtes vous sûr de vouloir supprimer la série {{item.getTitre()}} ?')">
+
+					<input type="hidden" name="_method" value="delete">
+					<input type="hidden" name="token" value="{{csrf_token("DeLeteCSRFtokenSerie" ~ item.getId() ~ "MonReufré")}}">
+					<button type="submit" class="hiddenbtn">
+					{% else %}
+						<a class="overlay" href="{{path("app_admin_updateserie", {id: item.getId()})}}"></a>
+					{% endif %}
+				{% else %}
+					<a class="overlay" href="{{path("app_serie_details", {id: item.getId()})}}"></a>
+				{% endif %}
+				<div class="row g-0">
+					<img src="{{item.getImage()}}" class="img-fluid rounded-start img-card" alt="{{item.getTitre()}}">
+
+					<div class="card-body">
+						<h5 class="card-title">
+							<img src="{{item.getPays().getDrapeau()}}" height="20">
+							{{ item.getTitre() }}
+						</h5>
+						<p class="card-text">
+							<small class="text-body-secondary">Première Diffusion :
+								{{ item.getPremiereDiffusion()|date("d/m/Y") }}</small>
+						</p>
+
+					</div>
+				</div>
+				{% if app.request.attributes.get('_route') == "app_admin_listeseries" %}
+					{% if action == "delete" %}
+					</button>
+				</form>
+			{% endif %}
 		{% endif %}
-		<div class="row g-0">
-			<img src="{{item.getImage()}}" class="img-fluid rounded-start img-card" alt="{{item.getTitre()}}">
 
-			<div class="card-body">
-				<h5 class="card-title">
-					<img src="{{item.getPays().getDrapeau()}}" height="20">
-					{{ item.getTitre() }}
-				</h5>
-				<p class="card-text">
-					<small class="text-body-secondary">Première Diffusion :
-						{{ item.getPremiereDiffusion()|date("d/m/Y") }}</small>
-				</p>
-
-			</div>
-		</div>
 	</div>
 </div>

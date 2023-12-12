@@ -16,6 +16,7 @@ use App\Repository\PaysRepository;
 use App\Repository\SerieRepository;
 use App\Repository\SerieTvRepository;
 use App\Repository\SerieWebRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -29,6 +30,79 @@ class AdminController extends AbstractController
     public function index(): Response
     {
         return $this->render('admin/index.html.twig');
+    }
+
+
+    #[Route('/admin/series/delete/{id}', name: 'app_admin_deleteserie', methods: 'delete')]
+    public function deleteSerie(SerieRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
+    {
+        $serie = $repo->find($id);
+
+        if (!$serie) {
+            $this->addFlash("err", "Série introuvable");
+            return $this->redirectToRoute("app_admin");
+        }
+        if (
+            !$this->isCsrfTokenValid("DeLeteCSRFtokenSerie" . $id . "MonReufré", $request->get("token"))
+        ) {
+            $this->addFlash("err", "Token INVALIDE");
+            return $this->redirectToRoute("app_admin");
+        }
+
+        $entityManager = $manager->getManager();
+        $entityManager->remove($serie);
+        $entityManager->flush();
+
+        $this->addFlash("success", "La série à bien été supprimée avec succès !");
+        return $this->redirectToRoute("app_serie");
+    }
+
+    #[Route('/admin/genre/delete/{id}', name: 'app_admin_deletegenre', methods: 'delete')]
+    public function deleteGenre(GenreRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
+    {
+        $genre = $repo->find($id);
+
+        if (!$genre) {
+            $this->addFlash("err", "Genre introuvable");
+            return $this->redirectToRoute("app_admin");
+        }
+        if (
+            !$this->isCsrfTokenValid("DeLeteCSRFtokenGenre" . $id . "MonReufré", $request->get("token"))
+        ) {
+            $this->addFlash("err", "Token invalide");
+            return $this->redirectToRoute("app_admin");
+        }
+
+        $entityManager = $manager->getManager();
+        $entityManager->remove($genre);
+        $entityManager->flush();
+
+        $this->addFlash("success", "Le genre à bien été supprimé avec succès !");
+        return $this->redirectToRoute("app_serie");
+    }
+
+    #[Route('/admin/pays/delete/{id}', name: 'app_admin_deletepays', methods: 'delete')]
+    public function deletePays(PaysRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
+    {
+        $pays = $repo->find($id);
+
+        if (!$pays) {
+            $this->addFlash("err", "Pays introuvable");
+            return $this->redirectToRoute("app_admin");
+        }
+        if (
+            !$this->isCsrfTokenValid("DeLeteCSRFtokenPays" . $id . "MonReufré", $request->get("token"))
+        ) {
+            $this->addFlash("err", "Token invalide");
+            return $this->redirectToRoute("app_admin");
+        }
+
+        $entityManager = $manager->getManager();
+        $entityManager->remove($pays);
+        $entityManager->flush();
+
+        $this->addFlash("success", "Le pays à bien été supprimé avec succès !");
+        return $this->redirectToRoute("app_serie");
     }
 
     #[Route('/admin/series/add/{type}', name: 'app_admin_addserie')]
@@ -110,8 +184,8 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/listeSeries/{type}', name: 'app_admin_listeseries')]
-    public function listeSeries(SerieTvRepository $serieTv, SerieWebRepository $serieWeb, string $type): Response
+    #[Route('/admin/listeSeries/{action}/{type}', name: 'app_admin_listeseries')]
+    public function listeSeries(SerieTvRepository $serieTv, SerieWebRepository $serieWeb, string $action, string $type): Response
     {
         if ($type == "tv") {
             $series = $serieTv->findAll();
@@ -123,25 +197,28 @@ class AdminController extends AbstractController
         }
         return $this->render('admin/listeSerie.html.twig', [
             "type" => $type,
-            "LesSeries" => $series
+            "LesSeries" => $series,
+            "action" => $action
         ]);
     }
 
-    #[Route('/admin/listeGenres', name: 'app_admin_listegenres')]
-    public function listeGenres(GenreRepository $genre): Response
+    #[Route('/admin/listeGenres/{action}', name: 'app_admin_listegenres')]
+    public function listeGenres(GenreRepository $genre, string $action): Response
     {
         $genres = $genre->findAll();
         return $this->render('admin/listeGenre.html.twig', [
-            "LesGenres" => $genres
+            "LesGenres" => $genres,
+            "action" => $action
         ]);
     }
 
-    #[Route('/admin/listePays', name: 'app_admin_listepays')]
-    public function listePays(PaysRepository $pays): Response
+    #[Route('/admin/listePays/{action}', name: 'app_admin_listepays')]
+    public function listePays(PaysRepository $pays, string $action): Response
     {
         $pays = $pays->findAll();
         return $this->render('admin/listePays.html.twig', [
-            "LesPays" => $pays
+            "LesPays" => $pays,
+            "action" => $action
         ]);
     }
 

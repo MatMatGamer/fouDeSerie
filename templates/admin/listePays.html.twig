@@ -10,15 +10,27 @@
 				{% for item in LesPays %}
 					<div class="col">
 						<div class="card mb-2">
-							<a class="overlay" href="{{path("app_admin_updatepays", {id: item.getId()})}}"></a>
-							<div class="row g-0">
-								<div class="card-body">
-									<h5 class="card-title">
-										<img src="{{item.getDrapeau()}}" height="20">
-										{{ item.getNom() }}
-									</h5>
-								</div>
-							</div>
+							{% if action == "update"%}
+								<a class="overlay" href="{{path("app_admin_updatepays", {id: item.getId()})}}"></a>
+							{% elseif action == "delete" %}
+								<form action="{{ path("app_admin_deletepays", {id:item.getId()})}}" method="post" onsubmit="return confirm('Êtes vous sûr de vouloir supprimer le pays {{item.getNom()}} ?')">
+									<input type="hidden" name="_method" value="delete">
+									<input type="hidden" name="token" value="{{csrf_token("DeLeteCSRFtokenPays" ~ item.getId() ~ "MonReufré")}}">
+									<button type="submit" class="hiddenbtn">
+									{% endif %}
+									<div class="row g-0">
+										<div class="card-body">
+											<h5 class="card-title">
+												<img src="{{item.getDrapeau()}}" height="20">
+												{{ item.getNom() }}
+											</h5>
+										</div>
+									</div>
+									{% if action == "delete" %}
+									</button>
+								</form>
+							{% endif %}
+
 						</div>
 					</div>
 
