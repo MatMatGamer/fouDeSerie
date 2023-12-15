@@ -8,6 +8,7 @@ use App\Repository\PaysRepository;
 use App\Repository\SerieRepository;
 use App\Repository\SerieWebRepository;
 use App\Repository\SerieTvRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,15 +36,28 @@ class SerieController extends AbstractController
     #[Route('/serie/details/{id}', name: 'app_serie_details')]
     public function serieDetails(SerieRepository $serieRepo, $id)
     {
-        return $this->render('serie/details.html.twig', [
-            'LaSerie' => $serieRepo->find($id)
-        ]);
+        try {
+            $serie = $serieRepo->find($id);
+            if ($serie == null) throw $this->createNotFoundException('La série recherchée est introuvable');
+            return $this->render('serie/details.html.twig', [
+                'LaSerie' => $serie
+            ]);
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => 404, "message" => $e->getMessage()]);
+        }
     }
 
     #[Route('/serie/pays/{id}', name: 'app_series_by_pays')]
     public function paysSeries(PaysRepository $paysRepo, GenreRepository $genreRepo, SerieWebRepository $serieWebRepo, SerieTvRepository $serieTvRepo, $id)
     {
-        $series = $paysRepo->find($id)->getSeries();
+        try {
+            $pays = $paysRepo->find($id);
+            if ($pays == null) throw $this->createNotFoundException("Le pays est introuvable");
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => 404, "message" => $e->getMessage()]);
+        }
+
+        $series = $pays->getSeries();
 
         $seriesTv = array();
         $seriesWeb = array();
@@ -67,7 +81,14 @@ class SerieController extends AbstractController
     #[Route('/serie/genre/{id}', name: 'app_series_by_genre')]
     public function genreSeries(PaysRepository $paysRepo, GenreRepository $genreRepo, SerieWebRepository $serieWebRepo, SerieTvRepository $serieTvRepo, $id)
     {
-        $series = $genreRepo->find($id)->getLesSeries();
+        try {
+            $genre = $genreRepo->find($id);
+            if ($genre == null) throw $this->createNotFoundException("Le genre est introuvable");
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => 404, "message" => $e->getMessage()]);
+        }
+
+        $series = $genre->getLesSeries();
 
         $seriesTv = array();
         $seriesWeb = array();
