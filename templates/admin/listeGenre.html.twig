@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+		{% include "/layouts/nav.html.twig" %}
+		<main class="px-3">
+			<h1>Les Genres</h1>
+
+			<div class="row row-cols-2 row-cols-md-3 g-4">
+				{% for item in LesGenres %}
+					<div class="col">
+						<div class="card mb-2">
+							{% if action == "update"%}
+								<a class="overlay" href="{{path("app_admin_updategenre", {id: item.getId()})}}"></a>
+							{% elseif action == "delete" %}
+								<form action="{{ path("app_admin_deletegenre", {id:item.getId()})}}" method="post" onsubmit="return confirm('Êtes vous sûr de vouloir supprimer le genre {{item.getLibelle()}} ?')">
+									<input type="hidden" name="_method" value="delete">
+									<input type="hidden" name="token" value="{{csrf_token("DeLeteCSRFtokenGenre" ~ item.getId() ~ "MonReufré")}}">
+									<button type="submit" class="hiddenbtn">
+									{% endif %}
+									<div class="row g-0">
+										<div class="card-body">
+											<h5 class="card-title">
+												{{ item.getLibelle() }}
+											</h5>
+										</div>
+									</div>
+									{% if action == "delete" %}
+									</button>
+								</form>
+							{% endif %}
+
+						</div>
+					</div>
+
+				{% endfor %}
+			</div>
+
+		</main>
+
+	</div>
+{% endblock %}

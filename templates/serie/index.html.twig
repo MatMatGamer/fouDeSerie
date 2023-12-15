@@ -4,6 +4,12 @@
 	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 		{% include "/layouts/nav.html.twig" %}
 		<main class="px-3">
+			{% for flash in app.flashes("success") %}
+				<div class="alert alert-success" role="alert" data-bs-theme="dark">
+					{{flash}}
+				</div>
+			{% endfor %}
+
 			<h1>Les Séries</h1>
 			<div class="alert alert-info" role="alert" data-bs-theme="dark">
 

@@ -4,15 +4,14 @@ namespace App\Form;
 
 use App\Entity\Genre;
 use App\Entity\Pays;
-use App\Entity\SerieTv;
+use App\Entity\Serie;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SerieTvType extends AbstractType
+class SerieType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -20,16 +19,10 @@ class SerieTvType extends AbstractType
             ->add('titre')
             ->add('resume')
             ->add('premiereDiffusion', null, [
-                "placeholder" => [
-                    'year' => "Année",
-                    'month' => "Mois",
-                    'day' => "Jour",
-                ],
-                'format' => 'dd MM yyyy'
+                'widget' => 'single_text',
             ])
             ->add('nbEpisodes')
             ->add('image')
-            ->add('chaineDiffusion')
             ->add(
                 'pays',
                 EntityType::class,
@@ -62,7 +55,7 @@ class SerieTvType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => SerieTv::class,
+            'data_class' => Serie::class,
         ]);
     }
 }
