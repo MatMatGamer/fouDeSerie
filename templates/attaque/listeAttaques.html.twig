@@ -5,29 +5,42 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
+	{#<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>#}
 {% endblock %}
 
 
 {% block body %}
 	<div class="row">
 
+		<a href="{{path('app_attaque_add')}}">
+			<button type="button" class="btn btn-primary">Ajouter une attaque</button>
+		</a>
 
 		<table class="table table-striped">
 			{% for uneAttaque in lesAttaques %}
 				<tr>
 					<td>{{uneAttaque.id}}</td>
 					<td>{{uneAttaque.nom}}</td>
+					<td></td>
 					<td>
-					 	<a href="{{path('app_delete_attaque', {'id':uneAttaque.id, 'verif': csrf_token('delete_attaque')})}}">
-							<button type="button" class="btn btn-danger">supprimer</button>
-						</a> 
-                       
+						<a href="{{path('app_attaque_update', {id: uneAttaque.id})}}" class="btn btn-secondary">
+							Modifier
+						</a>
+					</td>
+					<td>
+						<form action="{{ path("app_attaque_delete", {id:uneAttaque.getId()})}}" method="post" onsubmit="return confirm('Êtes vous sûr de vouloir supprimer l'attaque {{uneAttaque.nom}} ?')">
+							<input type="hidden" name="_method" value="delete">
+							<input type="hidden" name="token" value="{{csrf_token("DeLeteCSRFtokenAttaque" ~ uneAttaque.getId() ~ "AdiosAttaque")}}">
+							<button type="submit" class="btn btn-danger">
+								Supprimer
+							</button>
+						</form>
 					</td>
 
 				</tr>
+			</td>
 
-			{% endfor %}
-		</table>
-	</div>
-{% endblock %}
+		</tr>
+
+	{% endfor %}
+</table></div>{% endblock %}

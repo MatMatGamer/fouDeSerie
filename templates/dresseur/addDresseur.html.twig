@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Ajouter un dresseur
+{% endblock %}
+
+
+{% block body %}
+	<div class="row">
+		{{ form_start(formAddDresseur) }}
+		{{ form_row(formAddDresseur.nom) }}
+		<input type="submit" value="enregistrer">
+		{{ form_end(formAddDresseur) }}
+	</div>
+{% endblock %}

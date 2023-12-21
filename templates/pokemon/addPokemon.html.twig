@@ -10,10 +10,15 @@
 		{{ form_start(formAddPokemon) }}
 		{{ form_row(formAddPokemon.nom) }}
 		{{ form_row(formAddPokemon.poids) }}
-		{{ form_row(formAddPokemon.nbPattes) }}
 		{{ form_row(formAddPokemon.taille) }}
-		{{ form_row(formAddPokemon.nbHeuresTv) }}
+		{% if type == "casanier"%}
+			{{ form_row(formAddPokemon.nbPattes) }}
+			{{ form_row(formAddPokemon.nbHeuresTv) }}
+		{% elseif type=="mer"%}
+			{{ form_row(formAddPokemon.nbNageoires) }}
+		{% endif %}
 		{{ form_row(formAddPokemon.lesAttaques) }}
+		{{ form_row(formAddPokemon.leDresseur) }}
 		<input type="submit" value="enregistrer">
 		{{ form_end(formAddPokemon) }}
 	</div>

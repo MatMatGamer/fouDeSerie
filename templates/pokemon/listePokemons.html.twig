@@ -5,21 +5,43 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
+	{#<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>#}
 {% endblock %}
 
 
 {% block body %}
 	<div class="row">
 
-		<a href="{{path('app_pokemonCasanier_add')}}">
+		<a href="{{path('app_pokemon_add', {type: "casanier"})}}">
 			<button type="button" class="btn btn-primary">Ajouter un pokemon casanier</button>
 		</a>
+		<br>
+		<a href="{{path('app_pokemon_add', {type: "mer"})}}">
+			<button type="button" class="btn btn-primary">Ajouter un pokemon mer</button>
+		</a>
 		<table class="table table-striped mt-5">
+			<tr>
+				<th>ID</th>
+				<th>Nom</th>
+				<th>Type</th>
+			</tr>
 			{% for unPokemon in lesPokemons %}
 				<tr>
 					<td>{{unPokemon.id}}</td>
 					<td>{{unPokemon.nom}}</td>
+					<td>{{unPokemon.nbNageoires is defined ? "mer" : "casanier"}}</td>
+					<td>
+						<a href="{{path("app_pokemon_update", {id: unPokemon.id})}}" class="btn btn-primary">Modifier</a>
+					</td>
+					<td>
+						<form action="{{ path("app_pokemon_delete", {id:unPokemon.getId()})}}" method="post" onsubmit="return confirm('Êtes vous sûr de vouloir supprimer le pokemon {{unPokemon.nom}} ?')">
+							<input type="hidden" name="_method" value="delete">
+							<input type="hidden" name="token" value="{{csrf_token("DeLeteCSRFtokenPokemon" ~ unPokemon.getId() ~ "AdiosPokemon")}}">
+							<button type="submit" class="btn btn-danger">
+								Supprimer
+							</button>
+						</form>
+					</td>
 				</tr>
 
 			{% endfor %}

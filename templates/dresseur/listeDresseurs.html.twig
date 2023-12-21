@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Liste des dresseurs
+{% endblock %}
+
+{% block stylesheets %}
+	{#<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>#}
+{% endblock %}
+
+
+{% block body %}
+	<div class="row">
+
+		<a href="{{path('app_dresseur_add')}}">
+			<button type="button" class="btn btn-primary">Ajouter un dresseur</button>
+		</a>
+		<table class="table table-striped mt-5">
+			{% for unDresseur in lesDresseurs %}
+				<tr>
+					<td>{{unDresseur.id}}</td>
+					<td>{{unDresseur.nom}}</td>
+					<td>
+						<a href="{{path('app_dresseur_update', {id: unDresseur.id})}}" class="btn btn-secondary">
+							Modifier
+						</a>
+					</td>
+					<td>
+						<form action="{{ path("app_dresseur_delete", {id:unDresseur.getId()})}}" method="post" onsubmit="return confirm('Êtes vous sûr de vouloir supprimer le dresseur {{unDresseur.nom}} ?')">
+							<input type="hidden" name="_method" value="delete">
+							<input type="hidden" name="token" value="{{csrf_token("DeLeteCSRFtokenDresseur" ~ unDresseur.getId() ~ "AdiosDresseur")}}">
+							<button type="submit" class="btn btn-danger">
+								Supprimer
+							</button>
+						</form>
+					</td>
+				</tr>
+			</td>
+
+
+		</tr>
+
+	{% endfor %}
+</table></div>{% endblock %}
