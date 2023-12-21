@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Liste des pokemons
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
+{% endblock %}
+
+
+{% block body %}
+	<div class="row">
+
+		<a href="{{path('app_pokemonCasanier_add')}}">
+			<button type="button" class="btn btn-primary">Ajouter un pokemon casanier</button>
+		</a>
+		<table class="table table-striped mt-5">
+			{% for unPokemon in lesPokemons %}
+				<tr>
+					<td>{{unPokemon.id}}</td>
+					<td>{{unPokemon.nom}}</td>
+				</tr>
+
+			{% endfor %}
+		</table>
+	</div>
+{% endblock %}
