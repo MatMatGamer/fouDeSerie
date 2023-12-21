@@ -8,12 +8,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Table(name: 'serie')]
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
 #[ORM\InheritanceType("SINGLE_TABLE")]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap(['tv' => SerieTv::class, 'web' => SerieWeb::class])]
+#[UniqueEntity("titre")]
 class Serie
 {
     #[ORM\Id]
@@ -21,7 +24,7 @@ class Serie
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -31,9 +34,12 @@ class Serie
     private ?\DateTimeInterface $premiereDiffusion = null;
 
     #[ORM\Column(nullable: true, name: "nbEpisodes")]
+    #[Assert\GreaterThan(0, message: "Vous devez entrer un nombre d'épisode supérieur à 0.")]
+    #[Assert\LessThan(10000, message: "Vous devez entrer un nombre d'épisode inférieur à 10 000.")]
     private ?int $nbEpisodes = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url]
     private ?string $image = null;
 
     #[ORM\ManyToOne(targetEntity: Pays::class, inversedBy: "series")]

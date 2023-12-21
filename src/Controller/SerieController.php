@@ -12,6 +12,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 use function PHPUnit\Framework\isInstanceOf;
@@ -42,8 +43,8 @@ class SerieController extends AbstractController
             return $this->render('serie/details.html.twig', [
                 'LaSerie' => $serie
             ]);
-        } catch (Exception $e) {
-            return $this->render('errors/error.html.twig', ["error" => 404, "message" => $e->getMessage()]);
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
         }
     }
 
@@ -53,8 +54,8 @@ class SerieController extends AbstractController
         try {
             $pays = $paysRepo->find($id);
             if ($pays == null) throw $this->createNotFoundException("Le pays est introuvable");
-        } catch (Exception $e) {
-            return $this->render('errors/error.html.twig', ["error" => 404, "message" => $e->getMessage()]);
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
         }
 
         $series = $pays->getSeries();
@@ -84,8 +85,8 @@ class SerieController extends AbstractController
         try {
             $genre = $genreRepo->find($id);
             if ($genre == null) throw $this->createNotFoundException("Le genre est introuvable");
-        } catch (Exception $e) {
-            return $this->render('errors/error.html.twig', ["error" => 404, "message" => $e->getMessage()]);
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
         }
 
         $series = $genre->getLesSeries();

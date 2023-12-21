@@ -18,10 +18,12 @@ use App\Repository\SerieTvRepository;
 use App\Repository\SerieWebRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractController
@@ -36,17 +38,19 @@ class AdminController extends AbstractController
     #[Route('/admin/series/delete/{id}', name: 'app_admin_deleteserie', methods: 'delete')]
     public function deleteSerie(SerieRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
     {
-        $serie = $repo->find($id);
+        try {
+            $serie = $repo->find($id);
 
-        if (!$serie) {
-            $this->addFlash("err", "Série introuvable");
-            return $this->redirectToRoute("app_admin");
-        }
-        if (
-            !$this->isCsrfTokenValid("DeLeteCSRFtokenSerie" . $id . "MonReufré", $request->get("token"))
-        ) {
-            $this->addFlash("err", "Token INVALIDE");
-            return $this->redirectToRoute("app_admin");
+            if ($serie == null) throw $this->createNotFoundException("La série est introuvable");
+            if (
+                !$this->isCsrfTokenValid("DeLeteCSRFtokenSerie" . $id . "MonReufré", $request->get("token"))
+            ) {
+                throw $this->createAccessDeniedException("Action non permise. Token CSRF invalide.");
+            }
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getCode(), "message" => $e->getMessage()]);
         }
 
         $entityManager = $manager->getManager();
@@ -60,17 +64,20 @@ class AdminController extends AbstractController
     #[Route('/admin/genre/delete/{id}', name: 'app_admin_deletegenre', methods: 'delete')]
     public function deleteGenre(GenreRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
     {
-        $genre = $repo->find($id);
-
-        if (!$genre) {
-            $this->addFlash("err", "Genre introuvable");
-            return $this->redirectToRoute("app_admin");
-        }
-        if (
-            !$this->isCsrfTokenValid("DeLeteCSRFtokenGenre" . $id . "MonReufré", $request->get("token"))
-        ) {
-            $this->addFlash("err", "Token invalide");
-            return $this->redirectToRoute("app_admin");
+        try {
+            $genre = $repo->find($id);
+            if (!$genre) {
+                throw $this->createNotFoundException("Le genre est introuvable");
+            }
+            if (
+                !$this->isCsrfTokenValid("DeLeteCSRFtokenGenre" . $id . "MonReufré", $request->get("token"))
+            ) {
+                throw $this->createAccessDeniedException("Action non permise. Token CSRF invalide.");
+            }
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getCode(), "message" => $e->getMessage()]);
         }
 
         $entityManager = $manager->getManager();
@@ -84,17 +91,19 @@ class AdminController extends AbstractController
     #[Route('/admin/pays/delete/{id}', name: 'app_admin_deletepays', methods: 'delete')]
     public function deletePays(PaysRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
     {
-        $pays = $repo->find($id);
+        try {
+            $pays = $repo->find($id);
 
-        if (!$pays) {
-            $this->addFlash("err", "Pays introuvable");
-            return $this->redirectToRoute("app_admin");
-        }
-        if (
-            !$this->isCsrfTokenValid("DeLeteCSRFtokenPays" . $id . "MonReufré", $request->get("token"))
-        ) {
-            $this->addFlash("err", "Token invalide");
-            return $this->redirectToRoute("app_admin");
+            if ($pays == null) throw $this->createNotFoundException("Le pays est introuvable");
+            if (
+                !$this->isCsrfTokenValid("DeLeteCSRFtokenPays" . $id . "MonReufré", $request->get("token"))
+            ) {
+                throw $this->createAccessDeniedException("Action non permise. Token CSRF invalide.");
+            }
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getCode(), "message" => $e->getMessage()]);
         }
 
         $entityManager = $manager->getManager();
@@ -108,17 +117,22 @@ class AdminController extends AbstractController
     #[Route('/admin/series/add/{type}', name: 'app_admin_addserie')]
     public function addSerie(ManagerRegistry $repo, Request $request, string $type): Response
     {
-        if ($type == "tv") {
-            $serie = new SerieTv();
-            $form = $this->createForm(SerieType::class, $serie)
-                ->add('chaineDiffusion');
-        } else if ($type == "web") {
-            $serie = new SerieWeb();
-            $form = $this->createForm(SerieType::class, $serie)
-                ->add('site');
-        } else {
-            $this->addFlash("err", "Le type spécifié est introuvable !");
-            return $this->redirectToRoute("app_admin");
+        try {
+            if ($type == "tv") {
+                $serie = new SerieTv();
+                $form = $this->createForm(SerieType::class, $serie)
+                    ->add('chaineDiffusion');
+            } else if ($type == "web") {
+                $serie = new SerieWeb();
+                $form = $this->createForm(SerieType::class, $serie)
+                    ->add('site');
+            } else {
+                throw $this->createNotFoundException("Le type spécifié est introuvable");
+            }
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getCode(), "message" => $e->getMessage()]);
         }
 
         $form->handleRequest($request);
@@ -187,13 +201,18 @@ class AdminController extends AbstractController
     #[Route('/admin/listeSeries/{action}/{type}', name: 'app_admin_listeseries')]
     public function listeSeries(SerieTvRepository $serieTv, SerieWebRepository $serieWeb, string $action, string $type): Response
     {
-        if ($type == "tv") {
-            $series = $serieTv->findAll();
-        } else if ($type == "web") {
-            $series = $serieWeb->findAll();
-        } else {
-            $this->addFlash("err", "Le type spécifié est introuvable !");
-            return $this->redirectToRoute("app_admin");
+        try {
+            if ($type == "tv") {
+                $series = $serieTv->findAll();
+            } else if ($type == "web") {
+                $series = $serieWeb->findAll();
+            } else {
+                throw $this->createNotFoundException("Le genre de série spécifié est introuvable !");
+            }
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getCode(), "message" => $e->getMessage()]);
         }
         return $this->render('admin/listeSerie.html.twig', [
             "type" => $type,
@@ -225,18 +244,25 @@ class AdminController extends AbstractController
     #[Route('/admin/series/update/{id}', name: 'app_admin_updateserie')]
     public function updateSerie(SerieRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
     {
-        $serie = $repo->find($id);
-        $form = $this->createForm(SerieType::class, $serie);
-        if ($serie instanceof SerieTv) {
-            $form->add('chaineDiffusion');
-            $type = "tv";
-        } else if ($serie instanceof SerieWeb) {
-            $form->add('site');
-            $type = "web";
-        } else {
-            $this->addFlash("err", "Une erreur est survenue sur cette série");
-            return $this->redirectToRoute("app_admin");
+        try {
+            $serie = $repo->find($id);
+            if ($serie == null) $this->createNotFoundException("La série est introuvable.");
+            $form = $this->createForm(SerieType::class, $serie);
+            if ($serie instanceof SerieTv) {
+                $form->add('chaineDiffusion');
+                $type = "tv";
+            } else if ($serie instanceof SerieWeb) {
+                $form->add('site');
+                $type = "web";
+            } else {
+                throw $this->createNotFoundException("Le genre est introuvable.");
+            }
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getCode(), "message" => $e->getMessage()]);
         }
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $manager->getManager();
@@ -256,7 +282,15 @@ class AdminController extends AbstractController
     #[Route('/admin/genres/update/{id}', name: 'app_admin_updategenre')]
     public function updateGenre(GenreRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
     {
-        $genre = $repo->find($id);
+        try {
+            $genre = $repo->find($id);
+            if ($genre == null) throw $this->createNotFoundException("Le genre est introuvable");
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getCode(), "message" => $e->getMessage()]);
+        }
+
         $form = $this->createForm(GenreType::class, $genre);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -280,7 +314,14 @@ class AdminController extends AbstractController
     #[Route('/admin/pays/update/{id}', name: 'app_admin_updatepays')]
     public function updatePays(PaysRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
     {
-        $pays = $repo->find($id);
+        try {
+            $pays = $repo->find($id);
+            if ($pays == null) throw $this->createNotFoundException("Le pays est introuvable");
+        } catch (NotFoundHttpException $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getStatusCode(), "message" => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->render('errors/error.html.twig', ["error" => $e->getCode(), "message" => $e->getMessage()]);
+        }
         $form = $this->createForm(PaysType::class, $pays);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
