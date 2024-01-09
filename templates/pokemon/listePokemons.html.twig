@@ -5,12 +5,19 @@
 {% endblock %}
 
 {% block stylesheets %}
-	{#<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>#}
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
 {% endblock %}
 
 
 {% block body %}
 	<div class="row">
+
+		{% for status, flash in app.flashes(["danger","success"]) %}
+			{% for message in flash %}
+				<div class="alert alert-{{status}}">{{message}}</div>
+			{% endfor %}
+		{% endfor %}
+
 
 		<a href="{{path('app_pokemon_add', {type: "casanier"})}}">
 			<button type="button" class="btn btn-primary">Ajouter un pokemon casanier</button>

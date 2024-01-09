@@ -35,6 +35,7 @@ class AttaqueController extends AbstractController
             $entityManager = $doctrine->getManager();
             $entityManager->persist($attaque);
             $entityManager->flush();
+            $this->addFlash("success", "L'attaque à bien été ajoutée avec succès !");
             return $this->redirectToRoute('app_attaque_liste');
         }
         return $this->render('attaque/addAttaque.html.twig', [
@@ -58,6 +59,7 @@ class AttaqueController extends AbstractController
         if ($form->isSubmitted() and $form->isValid()) {
             $entityManager = $doctrine->getManager();
             $entityManager->flush();
+            $this->addFlash("success", "L'attaque à bien été modifiée avec succès !");
             return $this->redirectToRoute('app_attaque_liste');
         }
         return $this->render('attaque/addAttaque.html.twig', [
@@ -84,7 +86,7 @@ class AttaqueController extends AbstractController
         $entityManager = $manager->getManager();
         $entityManager->remove($attaque);
         $entityManager->flush();
-
+        $this->addFlash("success", "L'attaque à bien été supprimée avec succès !");
         return $this->redirectToRoute("app_attaque_liste");
     }
 }

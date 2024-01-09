@@ -36,6 +36,7 @@ class DresseurController extends AbstractController
             $entityManager = $doctrine->getManager();
             $entityManager->persist($dresseur);
             $entityManager->flush();
+            $this->addFlash("success", "Le dresseur à bien été ajouté avec succès !");
             return $this->redirectToRoute('app_dresseur_liste');
         }
         return $this->render('dresseur/addDresseur.html.twig', [
@@ -59,6 +60,7 @@ class DresseurController extends AbstractController
         if ($form->isSubmitted() and $form->isValid()) {
             $entityManager = $doctrine->getManager();
             $entityManager->flush();
+            $this->addFlash("success", "Le dresseur à bien été modifié avec succès !");
             return $this->redirectToRoute('app_dresseur_liste');
         }
         return $this->render('dresseur/addDresseur.html.twig', [
@@ -85,7 +87,7 @@ class DresseurController extends AbstractController
         $entityManager = $manager->getManager();
         $entityManager->remove($dresseur);
         $entityManager->flush();
-
+        $this->addFlash("success", "Le dresseur à bien été supprimé avec succès !");
         return $this->redirectToRoute("app_dresseur_liste");
     }
 }

@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\InheritanceType("SINGLE_TABLE")]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap(['tv' => SerieTv::class, 'web' => SerieWeb::class])]
-#[UniqueEntity("titre")]
+#[UniqueEntity("titre", message: "Le titre doit être unique !")]
 class Serie
 {
     #[ORM\Id]

@@ -46,6 +46,7 @@ class PokemonController extends AbstractController
             $entityManager = $doctrine->getManager();
             $entityManager->persist($pokemon);
             $entityManager->flush();
+            $this->addFlash("success", "Le pokemon à bien été ajouté avec succès !");
             return $this->redirectToRoute('app_pokemon_liste');
         }
         return $this->render('pokemon/addPokemon.html.twig', [
@@ -78,6 +79,7 @@ class PokemonController extends AbstractController
         if ($form->isSubmitted() and $form->isValid()) {
             $entityManager = $doctrine->getManager();
             $entityManager->flush();
+            $this->addFlash("success", "Le pokemon à bien été modifié avec succès !");
             return $this->redirectToRoute('app_pokemon_liste');
         }
         return $this->render('pokemon/addPokemon.html.twig', [
@@ -105,7 +107,15 @@ class PokemonController extends AbstractController
         $entityManager = $manager->getManager();
         $entityManager->remove($pokemon);
         $entityManager->flush();
-
+        $this->addFlash("success", "Le pokemon à bien été supprimé avec succès !");
         return $this->redirectToRoute("app_pokemon_liste");
+    }
+
+    #[Route(path: "/testinounet", name: "testinounetAddHeritageFormPokemonDuTurfu")]
+    public function test()
+    {
+        $pokemon = new PokemonCasanier();
+        $form = $this->createForm(PokemonCasanierType::class, $pokemon);
+        return $this->render("test.html.twig", ["form" => $form->createView()]);
     }
 }

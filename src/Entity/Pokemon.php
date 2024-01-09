@@ -6,12 +6,13 @@ use App\Repository\PokemonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: PokemonRepository::class)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
-#[ ORM\DiscriminatorColumn(name: 'type', type: 'string')]
-#[ ORM\DiscriminatorMap(['mer' => PokemonMer::class, 'casanier' => PokemonCasanier::class])]
-
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['mer' => PokemonMer::class, 'casanier' => PokemonCasanier::class])]
+#[UniqueEntity("nom", message: "Le nom du pokemon doit être unique !")]
 class Pokemon
 {
     #[ORM\Id]
@@ -19,7 +20,7 @@ class Pokemon
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $nom = null;
 
     #[ORM\Column(nullable: true)]
@@ -35,7 +36,7 @@ class Pokemon
     private Collection $lesAttaques;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(name: "idDresseur", referencedColumnName :"id")]
+    #[ORM\JoinColumn(name: "idDresseur", referencedColumnName: "id")]
     private ?Dresseur $leDresseur = null;
 
     public function __construct()
