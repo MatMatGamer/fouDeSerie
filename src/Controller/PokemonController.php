@@ -88,7 +88,7 @@ class PokemonController extends AbstractController
         ]);
     }
 
-    #[Route('/pokemon/delete/{id}', name: 'app_pokemon_delete', methods: 'delete')]
+    #[Route('/pokemon/delete/{id}', name: 'app_pokemon_delete', methods: ['delete'])]
     public function deleteDresseur(PokemonRepository $repo, ManagerRegistry $manager, Request $request, int $id): Response
     {
         try {
@@ -109,13 +109,5 @@ class PokemonController extends AbstractController
         $entityManager->flush();
         $this->addFlash("success", "Le pokemon à bien été supprimé avec succès !");
         return $this->redirectToRoute("app_pokemon_liste");
-    }
-
-    #[Route(path: "/testinounet", name: "testinounetAddHeritageFormPokemonDuTurfu")]
-    public function test()
-    {
-        $pokemon = new PokemonCasanier();
-        $form = $this->createForm(PokemonCasanierType::class, $pokemon);
-        return $this->render("test.html.twig", ["form" => $form->createView()]);
     }
 }
